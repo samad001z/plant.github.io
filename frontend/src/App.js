@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LandingPage from './pages/LandingPage';
 import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
-import HomePage from './pages/HomePage';
-import ScannerPage from './pages/ScannerPage';
-import ResultPage from './pages/ResultPage';
+import HomePage from './pages/ModernHomePage';
+import DashboardPage from './pages/DashboardPage';
+import ScanPage from './pages/ScanPage';
+import ResultsPage from './pages/ResultsPage';
+import HistoryPage from './pages/HistoryPage';
+import { ChatBot } from './components/AIAssistant';
 import './styles/App.css';
 
 function App() {
@@ -30,45 +33,77 @@ function App() {
       <div className="app">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route 
-            path="/signup" 
-            element={<SignUpPage onLogin={handleLogin} />} 
+          <Route
+            path="/signup"
+            element={<SignUpPage onLogin={handleLogin} />}
           />
-          <Route 
-            path="/signin" 
-            element={<SignInPage onLogin={handleLogin} />} 
+          <Route
+            path="/signin"
+            element={<SignInPage onLogin={handleLogin} />}
           />
-          <Route 
-            path="/home" 
+          <Route
+            path="/home"
             element={
               user ? (
                 <HomePage user={user} onLogout={handleLogout} />
               ) : (
                 <Navigate to="/signin" replace />
               )
-            } 
+            }
           />
-          <Route 
-            path="/scan" 
+          <Route
+            path="/dashboard"
             element={
               user ? (
-                <ScannerPage onScanComplete={handleScanComplete} />
+                <DashboardPage user={user} onLogout={handleLogout} />
               ) : (
                 <Navigate to="/signin" replace />
               )
-            } 
+            }
           />
-          <Route 
-            path="/result" 
+          <Route
+            path="/scan"
             element={
-              user && scanResult ? (
-                <ResultPage result={scanResult} />
+              user ? (
+                <ScanPage user={user} onLogout={handleLogout} onScanComplete={handleScanComplete} />
               ) : (
-                <Navigate to="/home" replace />
+                <Navigate to="/signin" replace />
               )
-            } 
+            }
+          />
+          <Route
+            path="/result"
+            element={
+              user ? (
+                <ResultsPage user={user} onLogout={handleLogout} result={scanResult} />
+              ) : (
+                <Navigate to="/signin" replace />
+              )
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              user ? (
+                <HistoryPage user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/signin" replace />
+              )
+            }
+          />
+          <Route
+            path="/assistant"
+            element={
+              user ? (
+                <HomePage user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/signin" replace />
+              )
+            }
           />
         </Routes>
+
+        {user && <ChatBot />}
       </div>
     </Router>
   );
